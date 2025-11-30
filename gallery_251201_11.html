@@ -1207,35 +1207,30 @@
     }
 
     function convertImageUrl(url) {
-      if (!url) return '';
+  if (!url) return '';
 
-      url = String(url).trim();
+  url = String(url).trim();
 
-      if (url.indexOf('lh3.googleusercontent.com') !== -1) {
-        return url;
-      }
+  let match = null;
+  
+  if (url.indexOf('open?id=') !== -1 || url.indexOf('uc?id=') !== -1) {
+    match = url.match(/id=([^&]+)/);
+  } else if (url.indexOf('/d/') !== -1) {
+    match = url.match(/\/d\/([^/]+)/);
+  } else if (url.indexOf('thumbnail?id=') !== -1) {
+    match = url.match(/id=([^&]+)/);
+  } else if (url.indexOf('export?id=') !== -1) {
+    match = url.match(/id=([^&]+)/);
+  }
 
-      if (url.indexOf('drive.google.com') === -1) {
-        return url;
-      }
+  if (match && match[1]) {
+    const id = match[1];
+    // Используем правильный эндпоинт для Google Drive
+    return `https://drive.google.com/uc?export=download&id=${id}`;
+  }
 
-      let match = null;
-      
-      if (url.indexOf('open?id=') !== -1 || url.indexOf('uc?id=') !== -1) {
-        match = url.match(/id=([^&]+)/);
-      } else if (url.indexOf('/d/') !== -1) {
-        match = url.match(/\/d\/([^/]+)/);
-      } else if (url.indexOf('thumbnail?id=') !== -1) {
-        match = url.match(/id=([^&]+)/);
-      }
-
-      if (match && match[1]) {
-        const id = match[1];
-        return `https://lh3.googleusercontent.com/d/${id}=w800`;
-      }
-
-      return url;
-    }
+  return url;
+}
 
     function populateFilters() {
       const categories = new Set();

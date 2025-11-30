@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biskuit ceramics</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tilda+Sans:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --color-cream: #fdfaf6;
+      --color-cream-dark: #f5f1ed;
+      --color-brown: #6b5d52;
+      --color-brown-light: #8d7d70;
+      --color-brown-dark: #4a3f36;
+      --color-black: #333333;
+      --color-accent: #ff7000;
+      --font-serif: 'Tilda Sans', -apple-system, sans-serif;
+      --font-sans: 'Tilda Sans', -apple-system, sans-serif;
+      --color-background: var(--color-cream);
+      --color-surface: #ffffff;
+      --color-text: var(--color-black);
+      --color-text-secondary: var(--color-brown);
+      --color-primary: var(--color-brown);
+      --color-primary-hover: var(--color-brown-dark);
+      --color-border: rgba(107, 93, 82, 0.15);
+      --color-card-border: rgba(107, 93, 82, 0.1);
+      --radius-base: 2px;
+      --radius-lg: 4px;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+      --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-background);
+      color: var(--color-text);
+      line-height: 1.6;
+      font-size: 18px;
+    }
+
+    .page-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 40px;
+      max-width: calc(100% - 320px);
+    }
+
+    .sidebar {
+      width: 320px;
+      background: var(--color-surface);
+      border-left: 1px solid var(--color-border);
+      padding: 40px 30px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: 48px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--color-text);
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      color: var(--color-text-secondary);
+      margin-bottom: 50px;
+      font-weight: 300;
+    }
+
+    .sidebar-title {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      color: var(--color-text);
+      letter-spacing: 0;
+    }
+
+    .filter-section {
+      margin-bottom: 35px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    select,
+    input {
+      padding: 12px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-base);
+      background: var(--color-background);
+      color: var(--color-text);
+      font-size: 15px;
+      font-family: var(--font-sans);
+      transition: all 0.2s ease;
+    }
+
+    select:hover,
+    input:hover {
+      border-color: var(--color-primary);
+    }
+
+    select:focus,
+    input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      background: var(--color-surface);
+    }
+
+    .stats {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 1px solid var(--color-border);
+      font-weight: 300;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 40px 30px;
+      margin-bottom: 60px;
+    }
+
+    .product-card {
+      background: var(--color-surface);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .product-card:hover {
+      opacity: 0.85;
+    }
+
+    .product-image {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      background: linear-gradient(90deg, var(--color-cream-dark) 25%, #f0ebe5 50%, var(--color-cream-dark) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      display: block;
+    }
+
+    .product-image.loaded {
+      animation: none;
+      background: var(--color-cream-dark);
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    .product-info {
+      padding: 20px 0;
+    }
+
+    .product-title {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--color-text);
+      line-height: 1.3;
+    }
+
+    .product-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      font-weight: 300;
+    }
+
+    .product-price {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-top: 12px;
+    }
+
+    /* АДАПТИВНЫЕ СТИЛИ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ */
+    @media (max-width: 768px) {
+      .page-wrapper {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        border-left: none;
+        border-bottom: 1px solid var(--color-border);
+        position: static;
+        height: auto;
+        padding: 30px 20px;
+      }
+
+      .main-content {
+        max-width: 100%;
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .subtitle {
+        font-size: 14px;
+        margin-bottom: 30px;
+      }
+
+      .sidebar-title {
+        font-size: 20px;
+        margin-bottom: 20px;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 30px 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        font-size: 16px;
+      }
+
+      .main-content {
+        padding: 20px 15px;
+      }
+
+      .sidebar {
+        padding: 25px 15px;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+
+      .subtitle {
+        font-size: 13px;
+      }
+
+      .sidebar-title {
+        font-size: 18px;
+      }
+
+      .gallery {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .product-title {
+        font-size: 18px;
+      }
+
+      .product-meta {
+        font-size: 13px;
+      }
+
+      .product-price {
+        font-size: 20px;
+      }
+
+      select,
+      input {
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+
+      .filter-section {
+        margin-bottom: 25px;
+      }
+    }
+  </style>
+</head>

@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biskuit ceramics</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tilda+Sans:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --color-cream: #fdfaf6;
+      --color-cream-dark: #f5f1ed;
+      --color-brown: #6b5d52;
+      --color-brown-light: #8d7d70;
+      --color-brown-dark: #4a3f36;
+      --color-black: #333333;
+      --color-accent: #ff7000;
+      --font-serif: 'Tilda Sans', -apple-system, sans-serif;
+      --font-sans: 'Tilda Sans', -apple-system, sans-serif;
+      --color-background: var(--color-cream);
+      --color-surface: #ffffff;
+      --color-text: var(--color-black);
+      --color-text-secondary: var(--color-brown);
+      --color-primary: var(--color-brown);
+      --color-primary-hover: var(--color-brown-dark);
+      --color-border: rgba(107, 93, 82, 0.15);
+      --color-card-border: rgba(107, 93, 82, 0.1);
+      --radius-base: 2px;
+      --radius-lg: 4px;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+      --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-background);
+      color: var(--color-text);
+      line-height: 1.6;
+      font-size: 18px;
+    }
+
+    .page-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 40px;
+      max-width: calc(100% - 320px);
+    }
+
+    .sidebar {
+      width: 320px;
+      background: var(--color-surface);
+      border-left: 1px solid var(--color-border);
+      padding: 40px 30px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: 48px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--color-text);
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      color: var(--color-text-secondary);
+      margin-bottom: 50px;
+      font-weight: 300;
+    }
+
+    .sidebar-title {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      color: var(--color-text);
+      letter-spacing: 0;
+    }
+
+    .filter-section {
+      margin-bottom: 35px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    select,
+    input {
+      padding: 12px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-base);
+      background: var(--color-background);
+      color: var(--color-text);
+      font-size: 15px;
+      font-family: var(--font-sans);
+      transition: all 0.2s ease;
+    }
+
+    select:hover,
+    input:hover {
+      border-color: var(--color-primary);
+    }
+
+    select:focus,
+    input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      background: var(--color-surface);
+    }
+
+    .stats {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 1px solid var(--color-border);
+      font-weight: 300;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 40px 30px;
+      margin-bottom: 60px;
+    }
+
+    .product-card {
+      background: var(--color-surface);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .product-card:hover {
+      opacity: 0.85;
+    }
+
+    .product-image {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      background: linear-gradient(90deg, var(--color-cream-dark) 25%, #f0ebe5 50%, var(--color-cream-dark) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      display: block;
+    }
+
+    .product-image.loaded {
+      animation: none;
+      background: var(--color-cream-dark);
+    }
+
+    .product-placeholder {
+      width: 100%;
+      aspect-ratio: 4/5;
+      background: linear-gradient(135deg, #f5f1ed 0%, #e8e0d8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: rgba(107, 93, 82, 0.3);
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    .product-info {
+      padding: 20px 0;
+    }
+
+    .product-title {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--color-text);
+      line-height: 1.3;
+    }
+
+    .product-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 18px;
+      color: var(--color-text-secondary);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .product-price {
+      font-family: var(--font-sans);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .product-price-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .product-price-old {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      text-decoration: line-through;
+      font-weight: 400;
+    }
+
+    .product-discount-badge {
+      background: var(--color-accent);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: var(--color-surface);
+      border-radius: 12px;
+      max-width: 1100px;
+      width: 95%;
+      max-height: 92vh;
+      overflow: hidden;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 0;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 26px;
+      line-height: 1;
+      z-index: 100;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(0, 0, 0, 0.8);
+      transform: scale(1.05);
+    }
+
+    .modal-left {
+      background: var(--color-cream-dark);
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .modal-image-main {
+      width: 100%;
+      max-width: 500px;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #f5f1ed 25%, #f0ebe5 50%, #f5f1ed 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .modal-image-main.loaded {
+      animation: none;
+      background: white;
+    }
+
+    .modal-image {
+      max-width: 100%;
+      max-height: 500px;
+      object-fit: contain;
+      display: none;
+    }
+
+    .modal-image.active {
+      display: block;
+    }
+
+    .modal-thumbnails {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .modal-thumbnail {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+      background: white;
+    }
+
+    .modal-thumbnail:hover {
+      border-color: var(--color-accent);
+    }
+
+    .modal-thumbnail.active {
+      border-color: var(--color-brown);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-right {
+      padding: 50px 45px;
+      overflow-y: auto;
+      background: var(--color-surface);
+    }
+
+    .modal-title {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--color-text);
+      line-height: 1.2;
+    }
+
+    .modal-code {
+      font-size: 13px;
+      color: var(--color-brown-light);
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .modal-price {
+      font-family: var(--font-sans);
+      font-size: 38px;
+      font-weight: 700;
+      color: var(--color-accent);
+      margin-bottom: 32px;
+      letter-spacing: -0.02em;
+    }
+
+    .modal-section {
+      margin-bottom: 28px;
+    }
+
+    .modal-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-brown-light);
+      margin-bottom: 12px;
+    }
+
+    .modal-details {
+      display: grid;
+      gap: 10px;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
+      font-size: 15px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-weight: 500;
+      color: var(--color-text-secondary);
+    }
+
+    .detail-value {
+      color: var(--color-text);
+      font-weight: 400;
+    }
+
+    .modal-description {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--color-text-secondary);
+      margin-bottom: 32px;
+    }
+
+    .modal-cta {
+      width: 100%;
+      padding: 16px 32px;
+      background: var(--color-accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius-base);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .modal-cta:hover {
+      background: #e56a00;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      font-size: 18px;
+      color: var(--color-text-secondary);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--color-text-secondary);
+    }
+
+    .empty h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 1024px) {
+      .page-wrapper {
+        flex-direction: column;
+      }
+
+      .main-content {
+        max-width: 100%;
+        padding: 30px 20px;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-left: none;
+        border-top: 1px solid var(--color-border);
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 30px 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 32px;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px 15px;
+      }
+
+      .modal-content {
+        grid-template-columns: 1fr;
+        max-height: 95vh;
+        width: 98%;
+      }
+
+      .modal-left {
+        padding: 30px 20px;
+      }
+
+      .modal-right {
+        padding: 30px 25px;
+      }
+
+      .modal-title {
+        font-size: 26px;
+      }
+
+      .modal-price {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrapper">
+    <div class="main-content">
+      <h1>Бисквит</h1>
+      <div class="subtitle">Студия керамики</div>
+
+      <div id="gallery" class="gallery">
+        <div class="loading">Загружаем работы...</div>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <h2 class="sidebar-title">Фильтры</h2>
+
+      <div class="filter-section">
+        <div class="filter-group">
+          <label for="searchInput">Поиск</label>
+          <input type="text" id="searchInput" placeholder="Название работы..." />
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-group">
+          <label for="authorFilter">Автор</label>
+          <select id="authorFilter">
+            <option value="">Все</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-group">
+          <label for="categoryFilter">Категория</label>
+          <select id="categoryFilter">
+            <option value="">Все</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-group">
+          <label for="priceMin">Цена от</label>
+          <input type="number" id="priceMin" placeholder="0" />
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-group">
+          <label for="priceMax">Цена до</label>
+          <input type="number" id="priceMax" placeholder="100000" />
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-group">
+          <label for="sortSelect">Сортировка</label>
+          <select id="sortSelect">
+            <option value="name-asc">А-Я</option>
+            <option value="name-desc">Я-А</option>
+            <option value="price-asc">Цена: возрастание</option>
+            <option value="price-desc">Цена: убывание</option>
+            <option value="date-desc">Новые первыми</option>
+            <option value="date-asc">Старые первыми</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="stats">
+        <span id="statsText">Загружаем...</span>
+      </div>
+    </aside>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">×</button>
+
+      <div class="modal-left">
+        <div class="modal-image-main">
+          <div id="modalImagesContainer"></div>
+        </div>
+        <div class="modal-thumbnails" id="modalThumbnails"></div>
+      </div>
+
+      <div class="modal-right">
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <div class="modal-code" id="modalCode"></div>
+        <div class="modal-price" id="modalPrice"></div>
+
+        <div class="modal-section">
+          <div class="modal-section-title">Характеристики</div>
+          <div class="modal-details" id="modalDetails"></div>
+        </div>
+
+        <div class="modal-description" id="modalDescription"></div>
+
+        <button class="modal-cta" onclick="orderProduct()">Заказать в WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const JSON_URL = 'https://script.google.com/macros/s/AKfycbx6Qy2q770tVWKS4jJMCMNzac3k9wjqQPG-xj9VTLdIS7XxU2fZaYCrDBBpoBSOr6Nxug/exec';
+
+    let allProducts = [];
+    let filteredProducts = [];
+    let currentImageIndex = 0;
+    let currentProduct = null;
+
+    async function loadProducts() {
+      try {
+        console.log('📥 Загружаем с:', JSON_URL);
+
+        let response = await fetch(JSON_URL, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+          cache: 'no-cache',
+          mode: 'cors'
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ JSON загружен');
+
+        let works = [];
+
+        if (data.works && Array.isArray(data.works)) {
+          works = data.works;
+        }
+        else if (Array.isArray(data)) {
+          works = data;
+        }
+        else if (data.record && Array.isArray(data.record)) {
+          works = data.record;
+        }
+        else if (data.products && Array.isArray(data.products)) {
+          works = data.products;
+        }
+        else if (data.items && Array.isArray(data.items)) {
+          works = data.items;
+        }
+        else if (data.data && Array.isArray(data.data)) {
+          works = data.data;
+        }
+
+        console.log(`📊 Найдено работ: ${works.length}`);
+
+        allProducts = works.map((item, index) => {
+          const rawImage = item.photo || item.image || item.фото || item.картинка || '';
+          const processedImage = convertImageUrl(rawImage);
+
+          return {
+            title: String(item.title || item.name || item.название || 'Без названия'),
+            author: String(item.author || item.автор || 'Автор неизвестен'),
+            category: String(item.category || item.категория || 'Другое'),
+            price: parseFloat(item.price || item.цена) || 0,
+            discount: parseFloat(item.discount || item.скидка) || 0,
+            image: processedImage,
+            photo: processedImage,
+            material: item.description || item.материал || item.описание || '',
+            size: item.size || item.размер || '',
+            color: item.color || item.цвет || '',
+            quantity: parseInt(item.quantity || item.количество) || 0,
+            description: item.description || item.описание || '',
+            date: item.timestamp || item.дата || new Date().toISOString(),
+            sku: `BISKUIT-${index + 1}`
+          };
+        });
+
+        console.log('✅ Данные обработаны');
+
+        populateFilters();
+        filterAndSort();
+
+      } catch (error) {
+        console.error('❌ Ошибка загрузки:', error);
+        document.getElementById('gallery').innerHTML = `
+          <div class="empty">
+            <h2>Ошибка загрузки</h2>
+            <p>${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    function convertImageUrl(url) {
+      if (!url) return '';
+
+      // Уже преобразованный URL
+      if (url.includes('drive.google.com/thumbnail')) {
+        return url;
+      }
+
+      if (url.includes('drive.google.com')) {
+        // Формат: https://drive.google.com/open?id=ABC123
+        if (url.includes('open?id')) {
+          const match = url.match(/id=([^&]+)/);
+          if (match && match[1]) {
+            const id = match[1];
+            return `https://drive.google.com/thumbnail?id=${id}&sz=w400`;
+          }
+        } 
+        // Формат: https://drive.google.com/file/d/ABC123/view
+        else if (url.includes('/d/')) {
+          const match = url.match(/\/d\/([^/]+)/);
+          if (match && match[1]) {
+            const id = match[1];
+            return `https://drive.google.com/thumbnail?id=${id}&sz=w400`;
+          }
+        } 
+        // Формат: https://drive.google.com/uc?id=ABC123
+        else if (url.includes('uc?id')) {
+          const match = url.match(/id=([^&]+)/);
+          if (match && match[1]) {
+            const id = match[1];
+            return `https://drive.google.com/thumbnail?id=${id}&sz=w400`;
+          }
+        }
+      }
+
+      return url;
+    }
+
+    function populateFilters() {
+      const categories = new Set();
+      const authors = new Set();
+
+      allProducts.forEach(product => {
+        if (product.category) categories.add(product.category);
+        if (product.author) authors.add(product.author);
+      });
+
+      const categoryFilter = document.getElementById('categoryFilter');
+      const authorFilter = document.getElementById('authorFilter');
+
+      Array.from(categories).sort().forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        categoryFilter.appendChild(option);
+      });
+
+      Array.from(authors).sort().forEach(author => {
+        const option = document.createElement('option');
+        option.value = author;
+        option.textContent = author;
+        authorFilter.appendChild(option);
+      });
+    }
+
+    function filterAndSort() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const category = document.getElementById('categoryFilter').value;
+      const author = document.getElementById('authorFilter').value;
+      const priceMin = parseFloat(document.getElementById('priceMin').value) || 0;
+      const priceMax = parseFloat(document.getElementById('priceMax').value) || Infinity;
+      const sort = document.getElementById('sortSelect').value;
+
+      filteredProducts = allProducts.filter(product => {
+        const matchesSearch = !search || 
+          product.title.toLowerCase().includes(search) ||
+          (product.author && product.author.toLowerCase().includes(search));
+        
+        const matchesCategory = !category || product.category === category;
+        const matchesAuthor = !author || product.author === author;
+        
+        const price = parseFloat(product.price) || 0;
+        const matchesPrice = price >= priceMin && price <= priceMax;
+
+        return matchesSearch && matchesCategory && matchesAuthor && matchesPrice;
+      });
+
+      const [sortBy, sortOrder] = sort.split('-');
+
+      filteredProducts.sort((a, b) => {
+        let valA, valB;
+
+        if (sortBy === 'name') {
+          valA = String(a.title || a.name || '').toLowerCase();
+          valB = String(b.title || b.name || '').toLowerCase();
+        } else if (sortBy === 'price') {
+          valA = parseFloat(a.price) || 0;
+          valB = parseFloat(b.price) || 0;
+        } else if (sortBy === 'date') {
+          valA = new Date(a.date || a.created_at || 0).getTime();
+          valB = new Date(b.date || b.created_at || 0).getTime();
+        }
+
+        if (sortOrder === 'asc') {
+          return valA > valB ? 1 : valA < valB ? -1 : 0;
+        } else {
+          return valA > valB ? -1 : valA < valB ? 1 : 0;
+        }
+      });
+
+      renderGallery();
+      updateStats();
+    }
+
+    function renderGallery() {
+      const gallery = document.getElementById('gallery');
+
+      if (filteredProducts.length === 0) {
+        gallery.innerHTML = `
+          <div class="empty">
+            <h2>Нет работ</h2>
+            <p>Попробуйте изменить фильтры</p>
+          </div>
+        `;
+        return;
+      }
+
+      gallery.innerHTML = filteredProducts.map((product, index) => {
+        const title = product.title || product.name;
+        const image = product.image;
+
+        let priceHtml;
+        if (product.discount && product.discount > 0) {
+          const discountedPrice = Math.round(product.price * (1 - product.discount / 100));
+          priceHtml = `
+            <div class="product-price-wrapper">
+              <div class="product-price">${discountedPrice}</div>
+              <div class="product-price-old">${product.price}</div>
+              <div class="product-discount-badge">${-product.discount}%</div>
+            </div>
+          `;
+        } else {
+          const price = product.price ? product.price : 'Цена по запросу';
+          priceHtml = `<div class="product-price">${price}</div>`;
+        }
+
+        // Проверяем, есть ли фото или это плейсхолдер
+        if (image === 'PLACEHOLDER') {
+          return `
+            <div class="product-card" onclick="openModal(${index})">
+              <div class="product-placeholder">📷</div>
+              <div class="product-info">
+                <div class="product-title">${title}</div>
+                <div class="product-meta">
+                  ${product.author ? `<div>${product.author}</div>` : ''}
+                </div>
+                ${priceHtml}
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="product-card" onclick="openModal(${index})">
+            <img src="${image}" alt="${title}" class="product-image" loading="lazy" 
+              onload="this.classList.add('loaded')" 
+              onerror="this.classList.add('loaded')"
+            />
+            <div class="product-info">
+              <div class="product-title">${title}</div>
+              <div class="product-meta">
+                ${product.author ? `<div>${product.author}</div>` : ''}
+              </div>
+              ${priceHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getProductImages(product) {
+      if (product.image && product.image !== 'PLACEHOLDER') {
+        return [product.image];
+      }
+      return [];
+    }
+
+    function updateStats() {
+      const total = allProducts.length;
+      const shown = filteredProducts.length;
+      document.getElementById('statsText').textContent = `${shown} из ${total}`;
+    }
+
+    function openModal(index) {
+      currentProduct = filteredProducts[index];
+      currentImageIndex = 0;
+      const modal = document.getElementById('modal');
+
+      const title = currentProduct.title || currentProduct.name;
+      const images = getProductImages(currentProduct);
+
+      let priceText;
+      if (currentProduct.discount && currentProduct.discount > 0) {
+        const discountedPrice = Math.round(currentProduct.price * (1 - currentProduct.discount / 100));
+        priceText = `
+          ${discountedPrice}
+          <div style="font-size: 18px; color: var(--color-text-secondary); text-decoration: line-through; font-weight: 400; margin-top: 8px;">
+            ${currentProduct.price}
+          </div>
+          <div style="display: inline-block; background: var(--color-accent); color: white; font-size: 14px; padding: 4px 10px; border-radius: 4px; margin-top: 12px;">
+            ${-currentProduct.discount}%
+          </div>
+        `;
+      } else {
+        priceText = currentProduct.price ? currentProduct.price : 'Цена по запросу';
+      }
+
+      document.getElementById('modalPrice').innerHTML = priceText;
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalCode').textContent = `${currentProduct.sku || 'BISKUIT-' + (index + 1)}`;
+
+      const imagesContainer = document.getElementById('modalImagesContainer');
+      
+      if (images.length > 0) {
+        imagesContainer.innerHTML = images.map((img, i) => `
+          <img src="${img}" alt="${title}" class="modal-image ${i === 0 ? 'active' : ''}" loading="lazy"
+            onload="document.querySelector('.modal-image-main').classList.add('loaded')"
+            onerror="document.querySelector('.modal-image-main').classList.add('loaded')"
+          />
+        `).join('');
+      } else {
+        imagesContainer.innerHTML = '<div style="font-size: 80px; color: rgba(107, 93, 82, 0.2);">📷</div>';
+        document.querySelector('.modal-image-main').classList.add('loaded');
+      }
+
+      const thumbnails = document.getElementById('modalThumbnails');
+      if (images.length > 1) {
+        thumbnails.innerHTML = images.map((img, i) => `
+          <img src="${img}" alt="${title}" class="modal-thumbnail ${i === 0 ? 'active' : ''}" onclick="setImage(${i})" />
+        `).join('');
+        thumbnails.style.display = 'flex';
+      } else {
+        thumbnails.style.display = 'none';
+      }
+
+      const details = [];
+
+      if (currentProduct.author) {
+        details.push({ label: 'Автор', value: currentProduct.author });
+      }
+      if (currentProduct.category) {
+        details.push({ label: 'Категория', value: currentProduct.category });
+      }
+      if (currentProduct.size) {
+        details.push({ label: 'Размер', value: currentProduct.size });
+      }
+      if (currentProduct.color) {
+        details.push({ label: 'Цвет', value: currentProduct.color });
+      }
+      if (currentProduct.quantity !== undefined) {
+        details.push({ label: 'Количество', value: currentProduct.quantity });
+      }
+
+      document.getElementById('modalDetails').innerHTML = details.map(d => `
+        <div class="detail-row">
+          <div class="detail-label">${d.label}</div>
+          <div class="detail-value">${d.value}</div>
+        </div>
+      `).join('');
+
+      const description = currentProduct.description || currentProduct.material;
+      document.getElementById('modalDescription').innerHTML = description ? `<div class="modal-section-title">Описание</div><p>${description}</p>` : '';
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function orderProduct() {
+      const productName = currentProduct.title || currentProduct.name;
+      const author = currentProduct.author;
+      const price = currentProduct.discount && currentProduct.discount > 0
+        ? Math.round(currentProduct.price * (1 - currentProduct.discount / 100))
+        : currentProduct.price;
+      const color = currentProduct.color;
+
+      const message = `
+        ${productName}
+        ${color ? `Цвет: ${color}` : ''}
+        Автор: ${author}
+        Цена: ${price}
+      `;
+
+      const phone = '79219095214';
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function changeImage(direction) {
+      const images = document.querySelectorAll('.modal-image');
+
+      if (images.length <= 1) return;
+
+      images[currentImageIndex].classList.remove('active');
+      currentImageIndex = (currentImageIndex + direction + images.length) % images.length;
+      images[currentImageIndex].classList.add('active');
+    }
+
+    function setImage(index) {
+      const images = document.querySelectorAll('.modal-image');
+
+      images[currentImageIndex].classList.remove('active');
+      currentImageIndex = index;
+      images[currentImageIndex].classList.add('active');
+    }
+
+    let searchTimeout;
+    document.getElementById('searchInput').addEventListener('input', () => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(filterAndSort, 300);
+    });
+
+    document.getElementById('categoryFilter').addEventListener('change', filterAndSort);
+    document.getElementById('authorFilter').addEventListener('change', filterAndSort);
+    document.getElementById('priceMin').addEventListener('input', filterAndSort);
+    document.getElementById('priceMax').addEventListener('input', filterAndSort);
+    document.getElementById('sortSelect').addEventListener('change', filterAndSort);
+
+    document.getElementById('modal').addEventListener('click', (e) => {
+      if (e.target.id === 'modal') {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (document.getElementById('modal').classList.contains('active')) {
+        if (e.key === 'Escape') closeModal();
+        if (e.key === 'ArrowLeft') changeImage(-1);
+        if (e.key === 'ArrowRight') changeImage(1);
+      }
+    });
+
+    loadProducts();
+  </script>
+</body>
+
+</html>
